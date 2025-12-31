@@ -30,7 +30,7 @@ body {
   inset: 0;
 
   /* >>> IMAGEM DE FUNDO AQUI <<< */
-  background-image: url("/img/background.png");
+  background-image: url("/img/background.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -65,7 +65,7 @@ body {
 }
 
 /* =========================================================
-   AJUSTES DE TABELA (opcional, mas elegante)
+   AJUSTES DE TABELA
    ========================================================= */
 
 .table {
@@ -75,5 +75,19 @@ body {
 
 thead th {
   background-color: rgba(2, 6, 23, 0.9);
+}
+
+.demon-image-tooltip .tooltip-inner {
+  padding: 0;
+  background-color: #000;
+  border-radius: 6px;
+}
+
+.demon-image-tooltip img {
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
 }
 
