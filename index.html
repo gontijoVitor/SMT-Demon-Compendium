@@ -43,11 +43,11 @@
       <i class="fa-solid fa-spinner fa-spin me-2"></i> Loading demons...
     </div>
 
-      <div class="card bg-dark border-secondary text-light mb-4">
+      <div class="card bg-dark border-secondary text-light mb-4 p-2">
         <div class="card-body">
           <h5 class="card-title mb-3"><i class="fa-solid fa-filter me-2"></i> Filter</h5>
 
-          <div id="column-filters" class="d-flex flex-wrap gap-3 align-items-center">
+          <div id="column-filters" class="d-flex flex-wrap gap-3 align-items-center justify-content-between">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="name" checked />
               <label class="form-check-label">Name</label>
@@ -67,8 +67,14 @@
               <input class="form-check-input" type="checkbox" value="arcana" checked />
               <label class="form-check-label">Arcana</label>
             </div>
+            <div class="mb-3 w-50">
+              <label class="form-check-label">Search:</label>
+              <input type="text" id="search-input" class="form-control bg-dark text-light border-secondary" placeholder="Search demons by name, race or arcana..."/>
+            </div>
+
           </div>
         </div>
+        
       </div>
     </div>
 
