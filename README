@@ -1,0 +1,181 @@
+# SMT V — Demon Compendium (Web)
+
+Um compêndio online interativo dos demônios de **Shin Megami Tensei V**, desenvolvido com **JavaScript puro**, focado em manipulação de dados complexos, renderização manual de UI e organização de código escalável.
+
+---
+
+## 📌 Sobre o projeto
+
+Após finalizar **Shin Megami Tensei V**, fiquei impressionado com o tamanho e a complexidade do compêndio de demônios do jogo.
+Isso me motivou a criar uma versão **web interativa** do compêndio, com foco em **exploração de dados**, **usabilidade** e **treino de fundamentos de front-end** sem o uso de frameworks como React, Vue ou Angular.
+
+O projeto consome dados da biblioteca **megaten** e transforma essas informações em uma interface navegável, filtrável e ordenável.
+
+---
+
+## 🎯 Objetivos
+
+* Praticar **JavaScript puro** para controle total de estado e renderização
+* Trabalhar com **estruturas de dados complexas**
+* Criar uma UI rica e interativa **sem frameworks de front-end**
+* Organizar o código pensando em **manutenibilidade e escalabilidade**
+* Simular desafios reais de uma aplicação de listagem grande (tabela, paginação, filtros)
+
+---
+
+## 🛠️ Tecnologias utilizadas
+
+* **JavaScript (ES6+)**
+* **Vite** (ambiente de desenvolvimento e build)
+* **Bootstrap 5** (layout, grid e tooltips)
+* **Font Awesome** (ícones)
+* **megaten** (fonte de dados dos demônios)
+* **HTML5 / CSS3**
+
+> ⚠️ Observação:
+> Bootstrap é utilizado apenas para **estilização e componentes visuais**.
+> Toda a lógica de estado, filtros, ordenação, paginação e renderização é feita manualmente em JavaScript.
+
+---
+
+## 🧠 Funcionalidades
+
+* 📋 Listagem completa de demônios do SMT V
+* 🔍 Busca dinâmica por nome
+* 🔃 Ordenação por colunas (nome, raça, nível, arcano)
+* 📑 Paginação com seleção de resultados por página
+* 🧩 Tooltips informativos com:
+
+  * Lore
+  * Alignment e Origin
+  * Skill Potentials
+  * Resistances
+  * HP, MP, Stats e Inheritance
+* 👁️ Visualização da imagem do demônio via hover
+* 🧼 Layout centralizado e consistente
+
+---
+
+## 🧱 Estrutura do projeto
+
+```text
+src/
+├── main.js              # Lógica principal da aplicação
+├── style.css            # Estilos customizados
+public/
+├── demons/              # Imagens dos demônios
+index.html               # Estrutura base da aplicação
+```
+
+---
+
+## 🧩 Arquitetura e fluxo de dados
+
+O projeto segue um fluxo claro de atualização de UI:
+
+```text
+Mudança de estado
+      ↓
+update()
+      ↓
+ordenar → paginar → renderizar
+```
+
+### Estado global
+
+```js
+let demonData = []
+let currentPage = 1
+let pageSize = 25
+let sortState = { column: null, direction: 'asc' }
+```
+
+Todo o comportamento da aplicação deriva dessas variáveis.
+
+---
+
+## 🔁 Pipeline de atualização
+
+A função central do projeto é:
+
+```js
+function update() {
+  const sorted = sortDemons(demonData)
+  const paged = paginate(sorted)
+
+  renderTable(paged)
+  renderPagination(sorted.length)
+}
+```
+
+Ela garante que:
+
+* Qualquer alteração (filtro, busca, ordenação, paginação)
+* Gere uma **UI consistente**
+* Sem estados duplicados ou efeitos colaterais
+
+---
+
+## 📊 Renderização manual da tabela
+
+* Cabeçalho gerado dinamicamente com base nas colunas
+* Ícones de ordenação atualizados conforme o estado
+* Cada linha renderizada com base em um `columnConfig`
+* Tooltips reinicializados após cada render
+
+Isso simula o funcionamento interno de frameworks modernos, porém de forma explícita.
+
+---
+
+## 🔎 Busca e filtros
+
+A busca por nome é:
+
+* **Case-insensitive**
+* Atualizada em tempo real
+* Integrada à paginação e ordenação
+
+Os filtros e a busca **não alteram os dados originais**, apenas o subconjunto exibido.
+
+---
+
+## 🖼️ Imagens dos demônios
+
+* Imagens carregadas dinamicamente com base no `devName`
+* Fallback automático para imagem padrão
+* Tamanho e resolução padronizados na tooltip
+* Evita layout quebrado por imagens inconsistentes
+
+---
+
+## 🧠 Aprendizados principais
+
+* Controle total de **estado sem frameworks**
+* Manipulação segura de HTML dinâmico
+* Organização de código por responsabilidade
+* Construção de UI reativa sem virtual DOM
+* Importância de um fluxo de renderização previsível
+* Uso consciente de bibliotecas apenas como suporte
+
+---
+
+## 🚀 Possíveis melhorias futuras
+
+* Filtros avançados (raça, arcano, alinhamento)
+* Modal detalhado ao invés de tooltip
+* Cache de imagens
+* Modo mobile otimizado
+* Tema claro/escuro
+
+---
+
+## 📸 Preview
+
+> *(Adicionar imagens de preview)*
+
+---
+
+## 📄 Licença
+
+Este projeto é apenas para fins educacionais e de estudo.
+Todos os dados pertencem à Atlus.
