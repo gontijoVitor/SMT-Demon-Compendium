@@ -6,12 +6,12 @@ An interactive online compendium of **Shin Megami Tensei V** demons, built with 
 
 ## 📖 Languages
 
-- 🇧🇷 [Português](#portuguese)
-- 🇺🇸 [English](#english)
+- [Português](#português)
+- [English](#english)
 
 ---
 
-# Portuguese 🇧🇷
+# Português
 
 ## Sobre o projeto 📌
 
@@ -116,7 +116,7 @@ Assets pertencem à Atlus.
 
 ---
 
-# English 🇺🇸
+# English
 
 ## About the project 📌
 
