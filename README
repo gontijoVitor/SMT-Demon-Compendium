@@ -1,4 +1,4 @@
-# SMT V — Demon Compendium (Web)
+# SMT V — Demon Compendium
 
 An interactive online compendium of **Shin Megami Tensei V** demons, built with **vanilla JavaScript**, focused on complex data manipulation, manual UI rendering, and scalable code organization.
 
@@ -6,14 +6,14 @@ An interactive online compendium of **Shin Megami Tensei V** demons, built with 
 
 ## 📖 Languages
 
-- 🇧🇷 [Português](#-sobre-o-projeto)
-- 🇺🇸 [English](#-about-the-project)
+- 🇧🇷 [Português](#sobre-o-projeto)
+- 🇺🇸 [English](#about-the-project)
 
 ---
 
 # 🇧🇷 Português
 
-## 📌 Sobre o projeto
+## Sobre o projeto 📌
 
 Após finalizar **Shin Megami Tensei V**, fiquei impressionado com o tamanho e a complexidade do compêndio de demônios do jogo.  
 Isso me motivou a desenvolver uma versão **web interativa** do compêndio, com foco em **exploração de dados**, **usabilidade** e **treino de fundamentos de front-end**, evitando frameworks como React, Vue ou Angular.
@@ -202,7 +202,7 @@ Todos os dados e assets pertencem à Atlus.
 
 # 🇺🇸 English
 
-## 📌 About the project
+## About the project 📌
 
 After finishing **Shin Megami Tensei V**, I was impressed by the size and complexity of the demon compendium.
 That inspired me to build a **web-based interactive version**, focusing on **data exploration**, **usability**, and **front-end fundamentals**, without relying on frameworks such as React, Vue, or Angular.
