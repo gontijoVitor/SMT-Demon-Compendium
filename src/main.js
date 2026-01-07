@@ -1,42 +1,23 @@
-/**
- * SMT V – Demons Compendium
- * ------------------------------------------------------------
- * Main application logic responsible for:
- * - Data loading
- * - State management
- * - Search, sorting and pagination
- * - Dynamic table rendering
- * - Tooltips and UI interactions
- *
- * Tech stack:
- * - JavaScript (Vanilla)
- * - Bootstrap (UI + tooltips)
- * - Font Awesome (icons)
- * - megaten library (data source)
- */
-
 import { Demon } from 'megaten'
 
 /* ============================================================
-   APPLICATION STATE
+   STATE
 ============================================================ */
+/*
+  Estado global da aplicação.
+  Toda a UI deriva exclusivamente dessas variáveis,
+  simulando o padrão de estado centralizado.
+*/
 
-/**
- * Holds all demons loaded from the megaten library
- */
-let demonData = []
+let demonData = []          // Dataset completo dos demônios
+let currentPage = 1         // Página atual da paginação
+let pageSize = 25           // Quantidade de resultados por página
+let searchQuery = ''        // Texto da busca
 
-/**
- * Pagination and filtering state
- */
-let currentPage = 1
-let pageSize = 25
-let searchQuery = ''
-
-/**
- * Table column order (left → right)
- * This array controls the final visual layout
- */
+/*
+  Ordem fixa das colunas da tabela.
+  Controla tanto o header quanto o body.
+*/
 const columnOrder = [
   'image',
   'name',
@@ -48,36 +29,37 @@ const columnOrder = [
   'details'
 ]
 
-/**
- * Columns that can be toggled on/off by the user
- */
-const toggleableColumns = new Set([
-  'name',
-  'race',
-  'level',
-  'arcana'
-])
+/*
+  Colunas que podem ser ativadas/desativadas pelo usuário
+  através dos checkboxes.
+*/
+const toggleableColumns = new Set(['name', 'race', 'level', 'arcana'])
 
-/**
- * Currently visible columns
- */
+/*
+  Conjunto de colunas atualmente visíveis.
+  Inicialmente todas as colunas toggleáveis estão ativas.
+*/
 const visibleColumns = new Set([...toggleableColumns])
 
-/**
- * Sorting state
- */
+/*
+  Estado de ordenação da tabela.
+  column: coluna ativa
+  direction: asc | desc
+*/
 let sortState = {
   column: null,
   direction: 'asc'
 }
 
 /* ============================================================
-   HELPER FUNCTIONS
+   HELPERS
 ============================================================ */
+/*
+  Funções auxiliares reutilizáveis.
+  Não alteram estado, apenas formatam dados para exibição.
+*/
 
-/**
- * Escapes HTML to prevent layout breaking or XSS
- */
+/* Escapa HTML para evitar quebra de layout ou XSS */
 function escapeHtml(str = '') {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -86,92 +68,87 @@ function escapeHtml(str = '') {
     .replace(/>/g, '&gt;')
 }
 
-/**
- * Resolves demon image path
- */
-function getDemonImage(demon) {
-  if (!demon.devName) return '/demons/unknown.png'
-  return `/demons/${demon.devName}.png`
+/* Resolve o caminho da imagem do demônio */
+function getDemonImage(d) {
+  if (!d.devName) return '/demons/unknown.png'
+  return `/demons/${d.devName}.png`
 }
 
-/**
- * Formats key-value objects (affinities, resistances, etc.)
- */
+/* Formata objetos simples em pares chave: valor */
 function formatKeyValue(obj = {}) {
   if (!obj || Object.keys(obj).length === 0) return 'No data'
 
   return Object.entries(obj)
-    .map(([key, value]) => `<strong>${key}</strong>: ${value}`)
+    .map(([k, v]) => `<strong>${k}</strong>: ${v}`)
     .join('<br>')
 }
 
-/**
- * Formats stat blocks
- */
+/* Formata os stats do demônio */
 function formatStats(stats = {}) {
   if (!stats || Object.keys(stats).length === 0) return 'No stats data'
 
   return Object.entries(stats)
-    .map(([key, value]) => `<strong>${key.toUpperCase()}</strong>: ${value}`)
+    .map(([k, v]) => `<strong>${k.toUpperCase()}</strong>: ${v}`)
     .join('<br>')
 }
 
-/**
- * Formats demon alignment
- */
+/* Formata o alinhamento moral/ético */
 function formatAlignment(alignment) {
   if (!alignment) return '-'
   return `${alignment.moral} / ${alignment.ethical}`
 }
 
 /* ============================================================
-   SEARCH / FILTERING
+   SEARCH
 ============================================================ */
+/*
+  Filtra os dados com base na string de busca.
+  A busca é case-insensitive e não altera o dataset original.
+*/
 
-/**
- * Filters demons by search query
- */
 function filterBySearch(data) {
   if (!searchQuery) return data
 
   const q = searchQuery.toLowerCase()
 
-  return data.filter(demon =>
-    demon.name?.toLowerCase().includes(q) ||
-    demon.race?.toLowerCase().includes(q) ||
-    demon.arcana?.toLowerCase().includes(q)
+  return data.filter(d =>
+    d.name?.toLowerCase().includes(q) ||
+    d.race?.toLowerCase().includes(q) ||
+    d.arcana?.toLowerCase().includes(q)
   )
 }
 
 /* ============================================================
-   COLUMN CONFIGURATION
+   COLUMN CONFIG
 ============================================================ */
+/*
+  Configuração central das colunas.
+  Cada coluna define:
+  - label: texto do header
+  - render: como o conteúdo será exibido na célula
+*/
 
-/**
- * Centralized column rendering configuration
- * Each column controls:
- * - Label
- * - How the cell content is rendered
- */
 const columnConfig = {
   image: {
     label: '',
-    render: demon => `
-      <i class="fa-solid fa-eye icon-inline"
-         data-bs-toggle="tooltip"
-         data-bs-html="true"
-         data-bs-custom-class="demon-image-tooltip"
-         data-bs-title="
-           <div style='width:300px;height:300px;display:flex;align-items:center;justify-content:center;background:#000'>
-             <img
-               src='${getDemonImage(demon)}'
-               alt='${escapeHtml(demon.name)}'
-               style='max-width:250px;max-height:250px;object-fit:contain'
-               onerror='this.src=&quot;/demons/unknown.png&quot;'
-             >
-           </div>
-         ">
-      </i>
+    render: d => `
+      <i
+        class="fa-solid fa-eye icon-inline"
+        style="cursor:pointer"
+        data-bs-toggle="tooltip"
+        data-bs-html="true"
+        data-bs-custom-class="demon-image-tooltip"
+        data-bs-title="
+          <div style='width:300px;height:300px;display:flex;align-items:center;justify-content:center;background:#000'>
+            <img
+              src='${getDemonImage(d)}'
+              alt='${escapeHtml(d.name)}'
+              style='max-width:250px;max-height:250px;object-fit:contain'
+              onerror='this.src=&quot;/demons/unknown.png&quot;'
+            >
+          </div>
+        "
+      ></i>
     `
   },
 
@@ -234,8 +211,12 @@ const columnConfig = {
 }
 
 /* ============================================================
-   SORTING
+   SORT
 ============================================================ */
+/*
+  Controle de ordenação da tabela.
+  Apenas colunas visíveis podem ser ordenadas.
+*/
 
 function handleSort(column) {
   if (!visibleColumns.has(column)) return
@@ -252,6 +233,7 @@ function handleSort(column) {
   update()
 }
 
+/* Aplica ordenação baseada no estado atual */
 function sortDemons(data) {
   if (!sortState.column) return data
 
@@ -274,6 +256,10 @@ function sortDemons(data) {
 /* ============================================================
    PAGINATION
 ============================================================ */
+/*
+  Responsável por dividir o dataset conforme
+  a página atual e o tamanho selecionado.
+*/
 
 function paginate(data) {
   if (pageSize === 'all') return data
@@ -281,15 +267,16 @@ function paginate(data) {
   return data.slice(start, start + pageSize)
 }
 
-function renderPagination(totalItems) {
+/* Renderiza os botões de paginação */
+function renderPagination(total) {
   const ul = document.getElementById('pagination')
   ul.innerHTML = ''
 
   if (pageSize === 'all') return
 
-  const totalPages = Math.ceil(totalItems / pageSize)
+  const pages = Math.ceil(total / pageSize)
 
-  for (let i = 1; i <= totalPages; i++) {
+  for (let i = 1; i <= pages; i++) {
     const li = document.createElement('li')
     li.className = `page-item ${i === currentPage ? 'active' : ''}`
 
@@ -307,8 +294,14 @@ function renderPagination(totalItems) {
 }
 
 /* ============================================================
-   TABLE RENDERING
+   TABLE
 ============================================================ */
+/*
+  Renderização manual completa da tabela:
+  - Cabeçalho dinâmico
+  - Corpo baseado em columnConfig
+  - Tooltips reinicializados a cada render
+*/
 
 function shouldRenderColumn(col) {
   return !toggleableColumns.has(col) || visibleColumns.has(col)
@@ -335,7 +328,10 @@ function renderTable(data) {
             : 'fa-sort-down'
           : 'fa-sort'
 
-      th.innerHTML = `${columnConfig[col].label} <i class="fa-solid ${icon} ms-1"></i>`
+      th.innerHTML = `
+        ${columnConfig[col].label}
+        <i class="fa-solid ${icon} ms-1"></i>
+      `
       th.style.cursor = 'pointer'
       th.onclick = () => handleSort(col)
     } else {
@@ -353,11 +349,11 @@ function renderTable(data) {
       if (!shouldRenderColumn(col)) return
 
       const td = document.createElement('td')
-      const content = columnConfig[col].render(demon)
+      const value = columnConfig[col].render(demon)
 
-      content.includes('<')
-        ? (td.innerHTML = content)
-        : (td.textContent = content)
+      typeof value === 'string' && value.includes('<')
+        ? (td.innerHTML = value)
+        : (td.textContent = value)
 
       tr.appendChild(td)
     })
@@ -365,49 +361,70 @@ function renderTable(data) {
     tbody.appendChild(tr)
   })
 
-  // Bootstrap tooltips
+  // Inicializa tooltips do Bootstrap
   document
     .querySelectorAll('[data-bs-toggle="tooltip"]')
     .forEach(el => new bootstrap.Tooltip(el))
 }
 
 /* ============================================================
-   COLUMN VISIBILITY FILTERS
+   COLUMN FILTERS
 ============================================================ */
+/*
+  Sincroniza os checkboxes com o estado
+  de colunas visíveis.
+*/
 
 function initColumnFilters() {
   const container = document.getElementById('column-filters')
 
   container.querySelectorAll('input[type="checkbox"]').forEach(input => {
     const col = input.value
+
     input.checked = visibleColumns.has(col)
 
     input.addEventListener('change', () => {
-      input.checked
-        ? visibleColumns.add(col)
-        : visibleColumns.delete(col)
+      if (input.checked) {
+        visibleColumns.add(col)
+      } else {
+        visibleColumns.delete(col)
 
-      if (sortState.column === col) sortState.column = null
+        if (sortState.column === col) {
+          sortState.column = null
+        }
+      }
+
       update()
     })
   })
 }
 
 /* ============================================================
-   UPDATE PIPELINE
+   UPDATE
 ============================================================ */
+/*
+  Pipeline central da aplicação.
+  Qualquer mudança de estado passa por aqui.
+*/
 
 function update() {
   let data = filterBySearch(demonData)
   data = sortDemons(data)
+  const paged = paginate(data)
 
-  renderTable(paginate(data))
+  renderTable(paged)
   renderPagination(data.length)
 }
 
 /* ============================================================
-   INITIALIZATION
+   INIT
 ============================================================ */
+/*
+  Inicialização da aplicação:
+  - Carrega dados
+  - Configura eventos
+  - Render inicial
+*/
 
 function init() {
   demonData = Demon.array
@@ -416,20 +433,20 @@ function init() {
 
   document.getElementById('status')?.classList.add('d-none')
 
-  // Search input
+  // Search
   const searchInput = document.getElementById('search-input')
-  let debounceTimer
+  let timer
 
   searchInput.addEventListener('input', e => {
-    clearTimeout(debounceTimer)
-    debounceTimer = setTimeout(() => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
       searchQuery = e.target.value.trim()
       currentPage = 1
       update()
     }, 200)
   })
 
-  // Page size selector
+  // Page size
   document.getElementById('page-size').addEventListener('change', e => {
     pageSize = e.target.value === 'all' ? 'all' : Number(e.target.value)
     currentPage = 1
