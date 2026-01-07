@@ -11,17 +11,6 @@ An interactive online compendium of **Shin Megami Tensei V** demons, built with 
 
 ---
 
-# Português
-
-## Sobre o projeto 📌
-
-Após finalizar **Shin Megami Tensei V**, fiquei impressionado com o tamanho e a complexidade do compêndio de demônios do jogo.  
-Isso me motivou a desenvolver uma versão **web interativa** do compêndio, com foco em **exploração de dados**, **usabilidade** e **treino de fundamentos de front-end**, evitando frameworks como React, Vue ou Angular.
-
-O projeto consome dados da biblioteca **megaten** e transforma essas informações em uma interface rica, navegável, filtrável e ordenável.
-
----
-
 ## 👁️ Preview visual
 - Visão geral do compêndio
 ![Visão geral do compêndio](public/github_images/visao_geral.png)
@@ -31,6 +20,17 @@ O projeto consome dados da biblioteca **megaten** e transforma essas informaçõ
 
 - Busca com imagem do demônio
 ![Busca com imagem do demônio](public/github_images/pesquisa_com_imagem.png)
+
+---
+
+# Português
+
+## Sobre o projeto 📌
+
+Após finalizar **Shin Megami Tensei V**, fiquei impressionado com o tamanho e a complexidade do compêndio de demônios do jogo.  
+Isso me motivou a desenvolver uma versão **web interativa** do compêndio, com foco em **exploração de dados**, **usabilidade** e **treino de fundamentos de front-end**, evitando frameworks como React, Vue ou Angular.
+
+O projeto consome dados da biblioteca **megaten** e transforma essas informações em uma interface rica, navegável, filtrável e ordenável.
 
 ---
 
