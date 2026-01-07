@@ -22,6 +22,16 @@ O projeto consome dados da biblioteca **megaten** e transforma essas informaçõ
 
 ---
 
+## 👁️ Preview visual
+
+![Visão geral do compêndio](github_images/visao_geral.png)
+
+![Ordenação por colunas](github_images/filtros_de_colunas.png)
+
+![Busca com imagem do demônio](github_images/pesquisa_com_imagem.png)
+
+---
+
 ## 🎯 Objetivos
 
 - Praticar **JavaScript puro** com controle total de estado
