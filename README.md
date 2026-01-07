@@ -6,12 +6,12 @@ An interactive online compendium of **Shin Megami Tensei V** demons, built with 
 
 ## 📖 Languages
 
-- 🇧🇷 [Português](#portugues)
+- 🇧🇷 [Português](#portuguese)
 - 🇺🇸 [English](#english)
 
 ---
 
-# 🇧🇷 Português
+# Portuguese 🇧🇷
 
 ## Sobre o projeto 📌
 
@@ -36,31 +36,25 @@ O projeto consome dados da biblioteca **megaten** e transforma essas informaçõ
 
 - **JavaScript (ES6+)**
 - **Vite** — ambiente de desenvolvimento e build
-- **Bootstrap 5** — layout, grid system e tooltips
-- **Font Awesome** — ícones
-- **[megaten](https://github.com/Squiddleton/Megaten)** — fonte de dados dos demônios
+- **Bootstrap 5**
+- **Font Awesome**
+- **[megaten](https://github.com/Squiddleton/Megaten)**
 - **HTML5 / CSS3**
 
 > ⚠️ **Observação**  
 > O Bootstrap é utilizado exclusivamente para **estilização e componentes visuais**.  
-> Toda a lógica de estado, filtros, ordenação, paginação e renderização é implementada manualmente em JavaScript.
+> Toda a lógica de estado é implementada manualmente em JavaScript.
 
 ---
 
 ## 🧠 Funcionalidades
 
 - 📋 Listagem completa de demônios do SMT V
-- 🔍 Busca dinâmica por nome (case-insensitive)
-- 🔃 Ordenação por colunas (nome, raça, nível e arcano)
-- 📑 Paginação com seleção de resultados por página
-- 🧩 Tooltips informativos contendo:
-  - Lore
-  - Alignment e Origin
-  - Skill Potentials
-  - Resistances
-  - HP, MP, Stats e Inheritance
-- 👁️ Visualização da imagem do demônio via hover
-- 🧼 Layout centralizado e consistente
+- 🔍 Busca dinâmica por nome
+- 🔃 Ordenação por colunas
+- 📑 Paginação
+- 🧩 Tooltips informativos
+- 👁️ Visualização de imagem via hover
 
 ---
 
@@ -68,18 +62,16 @@ O projeto consome dados da biblioteca **megaten** e transforma essas informaçõ
 
 ```text
 src/
-├── main.js              # Lógica principal da aplicação
-├── style.css            # Estilos customizados
+├── main.js
+├── style.css
 public/
-├── demons/              # Imagens dos demônios
-index.html               # Estrutura base da aplicação
+├── demons/
+index.html
 ````
 
 ---
 
 ## 🧩 Arquitetura e fluxo de dados
-
-O projeto segue um fluxo previsível de atualização da interface:
 
 ```text
 Mudança de estado
@@ -89,13 +81,9 @@ update()
 ordenar → filtrar → paginar → renderizar
 ```
 
-Esse fluxo garante consistência visual e evita efeitos colaterais.
-
 ---
 
 ## 🗂️ Gerenciamento de estado
-
-O estado global da aplicação é controlado manualmente:
 
 ```js
 let demonData = []
@@ -110,114 +98,39 @@ let sortState = {
 let searchQuery = ''
 ```
 
-Toda a UI é derivada exclusivamente dessas variáveis.
-
 ---
 
-## 🔁 Pipeline de atualização
+## 🚀 Possíveis melhorias
 
-A função central da aplicação é:
-
-```js
-function update() {
-  const filtered = filterDemons(demonData)
-  const sorted = sortDemons(filtered)
-  const paged = paginate(sorted)
-
-  renderTable(paged)
-  renderPagination(sorted.length)
-}
-```
-
-Ela garante que qualquer alteração de estado:
-
-* Gere uma UI consistente
-* Não mutile os dados originais
-* Não gere estados duplicados
-
----
-
-## 📊 Renderização manual da tabela
-
-* Cabeçalho gerado dinamicamente
-* Ícones de ordenação sincronizados com o estado
-* Linhas renderizadas via `columnConfig`
-* Tooltips reinicializados após cada render
-
-Esse processo simula o funcionamento interno de frameworks modernos, porém de forma explícita.
-
----
-
-## 🔎 Busca e filtros
-
-* Busca por nome **em tempo real**
-* Case-insensitive
-* Integrada à ordenação e paginação
-* Os dados originais nunca são alterados
-
----
-
-## 🖼️ Imagens dos demônios
-
-* Carregamento dinâmico com base no `devName`
-* Fallback automático para imagem padrão
-* Resolução fixa para evitar quebra de layout
-* Exibição via tooltip para manter a tabela limpa
-
----
-
-## 🧠 Principais aprendizados
-
-* Controle total de estado sem frameworks
-* Manipulação segura de HTML dinâmico
-* Separação clara de responsabilidades
-* Criação de UI reativa sem Virtual DOM
-* Importância de pipelines previsíveis
-* Uso consciente de bibliotecas externas
-
----
-
-## 🚀 Possíveis melhorias futuras
-
-* Filtros avançados (raça, arcano, alinhamento)
-* Modal detalhado ao invés de tooltip
+* Filtros avançados
+* Modal detalhado
 * Cache de imagens
-* Layout mobile-first
 * Tema claro/escuro
-
----
-
-## 📸 Preview
-
-> *(Adicionar screenshots ou GIFs da aplicação)*
 
 ---
 
 ## 📄 Licença
 
 Este projeto é apenas para fins educacionais.
-Todos os dados e assets pertencem à Atlus.
+Assets pertencem à Atlus.
 
 ---
 
-# 🇺🇸 English
+# English 🇺🇸
 
 ## About the project 📌
 
 After finishing **Shin Megami Tensei V**, I was impressed by the size and complexity of the demon compendium.
-That inspired me to build a **web-based interactive version**, focusing on **data exploration**, **usability**, and **front-end fundamentals**, without relying on frameworks such as React, Vue, or Angular.
-
-The application consumes data from the **megaten** library and turns it into a searchable, sortable, and paginated interface.
+That inspired me to build a **web-based interactive version**, focusing on **data exploration**, **usability**, and **front-end fundamentals**, without relying on frameworks.
 
 ---
 
 ## 🎯 Goals
 
-* Practice **vanilla JavaScript** with full control over state
+* Practice **vanilla JavaScript**
 * Work with **complex data structures**
-* Build interactive UIs **without front-end frameworks**
-* Organize code for **maintainability and scalability**
-* Simulate real-world large dataset challenges
+* Build UIs **without frameworks**
+* Ensure **maintainability**
 
 ---
 
@@ -227,23 +140,8 @@ The application consumes data from the **megaten** library and turns it into a s
 * **Vite**
 * **Bootstrap 5**
 * **Font Awesome**
-* **[megaten](https://github.com/Squiddleton/Megaten)**
+* **megaten**
 * **HTML5 / CSS3**
-
-> ⚠️ **Note**
-> Bootstrap is used only for **styling and UI components**.
-> All application logic is implemented manually in JavaScript.
-
----
-
-## 🧠 Features
-
-* 📋 Complete SMT V demon list
-* 🔍 Real-time name search
-* 🔃 Column sorting
-* 📑 Pagination with configurable page size
-* 🧩 Informational tooltips
-* 👁️ Demon image preview on hover
 
 ---
 
