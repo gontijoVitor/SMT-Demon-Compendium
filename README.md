@@ -23,12 +23,14 @@ O projeto consome dados da biblioteca **megaten** e transforma essas informaçõ
 ---
 
 ## 👁️ Preview visual
+- Visão geral do compêndio
+![Visão geral do compêndio](public/github_images/visao_geral.png)
 
-![Visão geral do compêndio](github_images/visao_geral.png)
+- Ordenação por colunas
+![Ordenação por colunas](public/github_images/filtros_de_colunas.png)
 
-![Ordenação por colunas](github_images/filtros_de_colunas.png)
-
-![Busca com imagem do demônio](github_images/pesquisa_com_imagem.png)
+- Busca com imagem do demônio
+![Busca com imagem do demônio](public/github_images/pesquisa_com_imagem.png)
 
 ---
 
