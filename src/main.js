@@ -1,14 +1,42 @@
+/**
+ * SMT V – Demons Compendium
+ * ------------------------------------------------------------
+ * Main application logic responsible for:
+ * - Data loading
+ * - State management
+ * - Search, sorting and pagination
+ * - Dynamic table rendering
+ * - Tooltips and UI interactions
+ *
+ * Tech stack:
+ * - JavaScript (Vanilla)
+ * - Bootstrap (UI + tooltips)
+ * - Font Awesome (icons)
+ * - megaten library (data source)
+ */
+
 import { Demon } from 'megaten'
 
 /* ============================================================
-   STATE
+   APPLICATION STATE
 ============================================================ */
 
+/**
+ * Holds all demons loaded from the megaten library
+ */
 let demonData = []
+
+/**
+ * Pagination and filtering state
+ */
 let currentPage = 1
 let pageSize = 25
 let searchQuery = ''
 
+/**
+ * Table column order (left → right)
+ * This array controls the final visual layout
+ */
 const columnOrder = [
   'image',
   'name',
@@ -20,21 +48,36 @@ const columnOrder = [
   'details'
 ]
 
-// colunas controláveis pelo filtro
-const toggleableColumns = new Set(['name', 'race', 'level', 'arcana'])
+/**
+ * Columns that can be toggled on/off by the user
+ */
+const toggleableColumns = new Set([
+  'name',
+  'race',
+  'level',
+  'arcana'
+])
 
-// colunas visíveis no momento
+/**
+ * Currently visible columns
+ */
 const visibleColumns = new Set([...toggleableColumns])
 
+/**
+ * Sorting state
+ */
 let sortState = {
   column: null,
   direction: 'asc'
 }
 
 /* ============================================================
-   HELPERS
+   HELPER FUNCTIONS
 ============================================================ */
 
+/**
+ * Escapes HTML to prevent layout breaking or XSS
+ */
 function escapeHtml(str = '') {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -43,73 +86,92 @@ function escapeHtml(str = '') {
     .replace(/>/g, '&gt;')
 }
 
-function getDemonImage(d) {
-  if (!d.devName) return '/demons/unknown.png'
-  return `/demons/${d.devName}.png`
+/**
+ * Resolves demon image path
+ */
+function getDemonImage(demon) {
+  if (!demon.devName) return '/demons/unknown.png'
+  return `/demons/${demon.devName}.png`
 }
 
+/**
+ * Formats key-value objects (affinities, resistances, etc.)
+ */
 function formatKeyValue(obj = {}) {
   if (!obj || Object.keys(obj).length === 0) return 'No data'
 
   return Object.entries(obj)
-    .map(([k, v]) => `<strong>${k}</strong>: ${v}`)
+    .map(([key, value]) => `<strong>${key}</strong>: ${value}`)
     .join('<br>')
 }
 
+/**
+ * Formats stat blocks
+ */
 function formatStats(stats = {}) {
   if (!stats || Object.keys(stats).length === 0) return 'No stats data'
 
   return Object.entries(stats)
-    .map(([k, v]) => `<strong>${k.toUpperCase()}</strong>: ${v}`)
+    .map(([key, value]) => `<strong>${key.toUpperCase()}</strong>: ${value}`)
     .join('<br>')
 }
 
+/**
+ * Formats demon alignment
+ */
 function formatAlignment(alignment) {
   if (!alignment) return '-'
   return `${alignment.moral} / ${alignment.ethical}`
 }
 
 /* ============================================================
-   SEARCH
+   SEARCH / FILTERING
 ============================================================ */
 
+/**
+ * Filters demons by search query
+ */
 function filterBySearch(data) {
   if (!searchQuery) return data
 
   const q = searchQuery.toLowerCase()
 
-  return data.filter(d =>
-    d.name?.toLowerCase().includes(q) ||
-    d.race?.toLowerCase().includes(q) ||
-    d.arcana?.toLowerCase().includes(q)
+  return data.filter(demon =>
+    demon.name?.toLowerCase().includes(q) ||
+    demon.race?.toLowerCase().includes(q) ||
+    demon.arcana?.toLowerCase().includes(q)
   )
 }
 
 /* ============================================================
-   COLUMN CONFIG
+   COLUMN CONFIGURATION
 ============================================================ */
 
+/**
+ * Centralized column rendering configuration
+ * Each column controls:
+ * - Label
+ * - How the cell content is rendered
+ */
 const columnConfig = {
   image: {
     label: '',
-    render: d => `
-      <i
-        class="fa-solid fa-eye icon-inline"
-        style="cursor:pointer"
-        data-bs-toggle="tooltip"
-        data-bs-html="true"
-        data-bs-custom-class="demon-image-tooltip"
-        data-bs-title="
-          <div style='width:300px;height:300px;display:flex;align-items:center;justify-content:center;background:#000'>
-            <img
-              src='${getDemonImage(d)}'
-              alt='${escapeHtml(d.name)}'
-              style='max-width:250px;max-height:250px;object-fit:contain'
-              onerror='this.src=&quot;/demons/unknown.png&quot;'
-            >
-          </div>
-        "
-      ></i>
+    render: demon => `
+      <i class="fa-solid fa-eye icon-inline"
+         data-bs-toggle="tooltip"
+         data-bs-html="true"
+         data-bs-custom-class="demon-image-tooltip"
+         data-bs-title="
+           <div style='width:300px;height:300px;display:flex;align-items:center;justify-content:center;background:#000'>
+             <img
+               src='${getDemonImage(demon)}'
+               alt='${escapeHtml(demon.name)}'
+               style='max-width:250px;max-height:250px;object-fit:contain'
+               onerror='this.src=&quot;/demons/unknown.png&quot;'
+             >
+           </div>
+         ">
+      </i>
     `
   },
 
@@ -172,7 +234,7 @@ const columnConfig = {
 }
 
 /* ============================================================
-   SORT
+   SORTING
 ============================================================ */
 
 function handleSort(column) {
@@ -219,15 +281,15 @@ function paginate(data) {
   return data.slice(start, start + pageSize)
 }
 
-function renderPagination(total) {
+function renderPagination(totalItems) {
   const ul = document.getElementById('pagination')
   ul.innerHTML = ''
 
   if (pageSize === 'all') return
 
-  const pages = Math.ceil(total / pageSize)
+  const totalPages = Math.ceil(totalItems / pageSize)
 
-  for (let i = 1; i <= pages; i++) {
+  for (let i = 1; i <= totalPages; i++) {
     const li = document.createElement('li')
     li.className = `page-item ${i === currentPage ? 'active' : ''}`
 
@@ -245,7 +307,7 @@ function renderPagination(total) {
 }
 
 /* ============================================================
-   TABLE (CORRIGIDO)
+   TABLE RENDERING
 ============================================================ */
 
 function shouldRenderColumn(col) {
@@ -273,10 +335,7 @@ function renderTable(data) {
             : 'fa-sort-down'
           : 'fa-sort'
 
-      th.innerHTML = `
-        ${columnConfig[col].label}
-        <i class="fa-solid ${icon} ms-1"></i>
-      `
+      th.innerHTML = `${columnConfig[col].label} <i class="fa-solid ${icon} ms-1"></i>`
       th.style.cursor = 'pointer'
       th.onclick = () => handleSort(col)
     } else {
@@ -294,11 +353,11 @@ function renderTable(data) {
       if (!shouldRenderColumn(col)) return
 
       const td = document.createElement('td')
-      const value = columnConfig[col].render(demon)
+      const content = columnConfig[col].render(demon)
 
-      typeof value === 'string' && value.includes('<')
-        ? (td.innerHTML = value)
-        : (td.textContent = value)
+      content.includes('<')
+        ? (td.innerHTML = content)
+        : (td.textContent = content)
 
       tr.appendChild(td)
     })
@@ -306,13 +365,14 @@ function renderTable(data) {
     tbody.appendChild(tr)
   })
 
+  // Bootstrap tooltips
   document
     .querySelectorAll('[data-bs-toggle="tooltip"]')
     .forEach(el => new bootstrap.Tooltip(el))
 }
 
 /* ============================================================
-   COLUMN FILTERS
+   COLUMN VISIBILITY FILTERS
 ============================================================ */
 
 function initColumnFilters() {
@@ -320,40 +380,33 @@ function initColumnFilters() {
 
   container.querySelectorAll('input[type="checkbox"]').forEach(input => {
     const col = input.value
-
     input.checked = visibleColumns.has(col)
 
     input.addEventListener('change', () => {
-      if (input.checked) {
-        visibleColumns.add(col)
-      } else {
-        visibleColumns.delete(col)
+      input.checked
+        ? visibleColumns.add(col)
+        : visibleColumns.delete(col)
 
-        if (sortState.column === col) {
-          sortState.column = null
-        }
-      }
-
+      if (sortState.column === col) sortState.column = null
       update()
     })
   })
 }
 
 /* ============================================================
-   UPDATE
+   UPDATE PIPELINE
 ============================================================ */
 
 function update() {
   let data = filterBySearch(demonData)
   data = sortDemons(data)
-  const paged = paginate(data)
 
-  renderTable(paged)
+  renderTable(paginate(data))
   renderPagination(data.length)
 }
 
 /* ============================================================
-   INIT
+   INITIALIZATION
 ============================================================ */
 
 function init() {
@@ -363,20 +416,20 @@ function init() {
 
   document.getElementById('status')?.classList.add('d-none')
 
-  // Search
+  // Search input
   const searchInput = document.getElementById('search-input')
-  let timer
+  let debounceTimer
 
   searchInput.addEventListener('input', e => {
-    clearTimeout(timer)
-    timer = setTimeout(() => {
+    clearTimeout(debounceTimer)
+    debounceTimer = setTimeout(() => {
       searchQuery = e.target.value.trim()
       currentPage = 1
       update()
     }, 200)
   })
 
-  // Page size
+  // Page size selector
   document.getElementById('page-size').addEventListener('change', e => {
     pageSize = e.target.value === 'all' ? 'all' : Number(e.target.value)
     currentPage = 1

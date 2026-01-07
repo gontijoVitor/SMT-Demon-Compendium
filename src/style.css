@@ -1,13 +1,20 @@
 /* =========================================================
-   BASE GLOBAL (limpa, sem Vite demo styles)
-   ========================================================= */
+   GLOBAL BASE STYLES
+   ---------------------------------------------------------
+   - Removes Vite demo defaults
+   - Defines typography, colors and rendering optimizations
+   - Keeps styling minimal and predictable
+========================================================= */
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
+  /* Default text color for dark UI */
   color: rgba(255, 255, 255, 0.9);
+
+  /* Improves font rendering quality */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -17,39 +24,52 @@
 body {
   margin: 0;
   min-height: 100vh;
+
+  /* Transparent to allow layered background system */
   background: transparent;
+
+  /* Prevents horizontal scroll caused by tooltips */
   overflow-x: hidden;
 }
 
 /* =========================================================
-   BACKGROUND COM IMAGEM (AQUI VOCÊ CONECTA A IMAGEM)
-   ========================================================= */
+   BACKGROUND LAYER
+   ---------------------------------------------------------
+   - Fixed full-screen image
+   - Sits behind all UI elements
+   - Does NOT affect content sharpness
+========================================================= */
 
 .background {
   position: fixed;
   inset: 0;
 
-  /* >>> IMAGEM DE FUNDO AQUI <<< */
+  /* >>> Background image path <<< */
   background-image: url("/img/background.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
+  /* Sent behind overlay and content */
   z-index: -2;
 }
 
 /* =========================================================
-   OVERLAY COM BLUR LEVE
-   ========================================================= */
+   OVERLAY + BLUR LAYER
+   ---------------------------------------------------------
+   - Improves text readability
+   - Adds subtle depth effect
+   - Keeps content crisp (blur does NOT affect children)
+========================================================= */
 
 .overlay {
   position: fixed;
   inset: 0;
 
-  /* escurecimento leve para legibilidade */
+  /* Dark translucent layer */
   background: rgba(15, 23, 42, 0.6);
 
-  /* >>> BLUR APLICADO AQUI <<< */
+  /* Background blur effect */
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 
@@ -57,25 +77,40 @@ body {
 }
 
 /* =========================================================
-   CONTEÚDO (sempre nítido)
-   ========================================================= */
+   CONTENT WRAPPER
+   ---------------------------------------------------------
+   - Ensures UI elements remain sharp
+   - Acts as main stacking context
+========================================================= */
 
 .content {
   position: relative;
 }
 
 /* =========================================================
-   AJUSTES DE TABELA
-   ========================================================= */
+   TABLE STYLING
+   ---------------------------------------------------------
+   - Enhances visual clarity
+   - Keeps Bootstrap base behavior intact
+========================================================= */
 
 .table {
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
+/* Table header background for contrast */
 thead th {
   background-color: rgba(2, 6, 23, 0.9);
 }
+
+/* =========================================================
+   TOOLTIP – DEMON IMAGE
+   ---------------------------------------------------------
+   - Fixed display size for inconsistent image resolutions
+   - Prevents layout shifting
+   - Matches dark theme
+========================================================= */
 
 .demon-image-tooltip .tooltip-inner {
   padding: 0;
@@ -83,11 +118,12 @@ thead th {
   border-radius: 6px;
 }
 
+/* Demon image constraints */
 .demon-image-tooltip img {
   max-width: 300px;
   max-height: 300px;
   object-fit: contain;
+
   display: block;
   margin: auto;
 }
-

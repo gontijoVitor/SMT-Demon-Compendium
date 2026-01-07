@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- ============================================================
+       META CONFIG
+  ============================================================ -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>SMTV Demon Compendium</title>
 
-  <!-- Bootstrap -->
+  <!-- ============================================================
+       EXTERNAL STYLES
+  ============================================================ -->
+
+  <!-- Bootstrap 5 (layout, grid, components) -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
   />
 
-  <!-- Font Awesome -->
+  <!-- Font Awesome (icons) -->
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     rel="stylesheet"
@@ -21,64 +28,100 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/img/icon.png" />
 
-  <!-- CSS -->
+  <!-- Custom styles -->
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 
 <body class="bg-dark text-light">
 
-  <!-- Background -->
+  <!-- ============================================================
+       BACKGROUND LAYERS
+       (visual only, no logic)
+  ============================================================ -->
   <div class="background"></div>
   <div class="overlay"></div>
 
+  <!-- ============================================================
+       MAIN APPLICATION CONTAINER
+  ============================================================ -->
   <main class="container my-5 content">
 
-    <!-- Header -->
+    <!-- ============================================================
+         HEADER
+    ============================================================ -->
     <header class="mb-4">
       <h1>Shin Megami Tensei V: Vengeance — Demon Compendium</h1>
     </header>
 
-    <!-- Loading -->
+    <!-- ============================================================
+         LOADING / STATUS MESSAGE
+         Controlled dynamically by JavaScript
+    ============================================================ -->
     <div id="status" class="alert alert-secondary">
-      <i class="fa-solid fa-spinner fa-spin me-2"></i> Loading demons...
+      <i class="fa-solid fa-spinner fa-spin me-2"></i>
+      Loading demons...
     </div>
 
-      <div class="card bg-dark border-secondary text-light mb-4 p-2">
-        <div class="card-body">
-          <h5 class="card-title mb-3"><i class="fa-solid fa-filter me-2"></i> Filter</h5>
+    <!-- ============================================================
+         FILTERS & SEARCH CARD
+    ============================================================ -->
+    <div class="card bg-dark border-secondary text-light mb-4 p-2">
+      <div class="card-body">
 
-          <div id="column-filters" class="d-flex flex-wrap gap-3 align-items-center justify-content-between">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="name" checked />
-              <label class="form-check-label">Name</label>
-            </div>
+        <h5 class="card-title mb-3">
+          <i class="fa-solid fa-filter me-2"></i>
+          Filter
+        </h5>
 
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="race" checked />
-              <label class="form-check-label">Race</label>
-            </div>
+        <!-- Column visibility filters + search input -->
+        <div
+          id="column-filters"
+          class="d-flex flex-wrap gap-3 align-items-center justify-content-between"
+        >
 
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="level" checked />
-              <label class="form-check-label">Level</label>
-            </div>
-
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="arcana" checked />
-              <label class="form-check-label">Arcana</label>
-            </div>
-            <div class="mb-3 w-50">
-              <label class="form-check-label">Search:</label>
-              <input type="text" id="search-input" class="form-control bg-dark text-light border-secondary" placeholder="Search demons by name, race or arcana..."/>
-            </div>
-
+          <!-- Column toggle: Name -->
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="name" checked />
+            <label class="form-check-label">Name</label>
           </div>
+
+          <!-- Column toggle: Race -->
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="race" checked />
+            <label class="form-check-label">Race</label>
+          </div>
+
+          <!-- Column toggle: Level -->
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="level" checked />
+            <label class="form-check-label">Level</label>
+          </div>
+
+          <!-- Column toggle: Arcana -->
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="arcana" checked />
+            <label class="form-check-label">Arcana</label>
+          </div>
+
+          <!-- Search input -->
+          <div class="w-50">
+            <label class="form-check-label">Search:</label>
+            <input
+              type="text"
+              id="search-input"
+              class="form-control bg-dark text-light border-secondary"
+              placeholder="Search demons by name, race or arcana..."
+            />
+          </div>
+
         </div>
-        
       </div>
     </div>
 
-    <!-- Table -->
+    <!-- ============================================================
+         DATA TABLE
+         Header and body rendered dynamically via JavaScript
+    ============================================================ -->
     <div class="table-responsive">
       <table class="table table-dark table-striped text-center align-middle">
         <thead>
@@ -88,49 +131,72 @@
       </table>
     </div>
 
-  <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3 card p-4 bg-dark border-secondary text-light">
-    <!-- Results per page -->
-    <div class="d-flex align-items-center gap-2">
-      <span class="text-secondary">Results per page:</span>
-      <select
-        id="page-size"
-        class="form-select form-select-sm bg-dark text-light border-secondary"
-        style="width: 90px"
-      >
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="75">75</option>
-        <option value="100">100</option>
-        <option value="all">All</option>
-      </select>
-    </div>
+    <!-- ============================================================
+         PAGINATION & RESULTS PER PAGE
+    ============================================================ -->
+    <div
+      class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3
+             card p-4 bg-dark border-secondary text-light"
+    >
 
-    <!-- Pagination -->
-    <nav class="d-flex align-items-center">
-      <ul class="pagination pagination-dark mb-0 flex-nowrap" id="pagination"></ul>
-    </nav>
-  </div>
+      <!-- Results per page selector -->
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-secondary">Results per page:</span>
+        <select
+          id="page-size"
+          class="form-select form-select-sm bg-dark text-light border-secondary"
+          style="width: 90px"
+        >
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="75">75</option>
+          <option value="100">100</option>
+          <option value="all">All</option>
+        </select>
+      </div>
+
+      <!-- Pagination -->
+      <nav class="d-flex align-items-center">
+        <ul
+          class="pagination pagination-dark mb-0 flex-nowrap"
+          id="pagination"
+        ></ul>
+      </nav>
+    </div>
 
   </main>
 
+  <!-- ============================================================
+       MODAL (Prepared for future detailed view)
+  ============================================================ -->
   <div class="modal fade" id="demonModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content bg-dark text-light border-secondary">
-          <div class="modal-header">
-            <h5 class="modal-title" id="demonModalTitle"></h5>
-            <button
-              type="button"
-              class="btn-close btn-close-white"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content bg-dark text-light border-secondary">
 
-          <div class="modal-body" id="demonModalBody"></div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="demonModalTitle"></h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+          ></button>
         </div>
+
+        <div class="modal-body" id="demonModalBody"></div>
+
       </div>
     </div>
+  </div>
 
+  <!-- ============================================================
+       SCRIPTS
+  ============================================================ -->
+
+  <!-- Bootstrap JS (tooltips, modal, components) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Main application logic (ES module, Vite compatible) -->
   <script type="module" src="/src/main.js"></script>
+
 </body>
 </html>
