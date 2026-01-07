@@ -6,8 +6,8 @@ An interactive online compendium of **Shin Megami Tensei V** demons, built with 
 
 ## 📖 Languages
 
-- 🇧🇷 [Português](#sobre-o-projeto)
-- 🇺🇸 [English](#about-the-project)
+- 🇧🇷 [Português](#portugues)
+- 🇺🇸 [English](#english)
 
 ---
 
@@ -38,7 +38,7 @@ O projeto consome dados da biblioteca **megaten** e transforma essas informaçõ
 - **Vite** — ambiente de desenvolvimento e build
 - **Bootstrap 5** — layout, grid system e tooltips
 - **Font Awesome** — ícones
-- **megaten** — fonte de dados dos demônios
+- **[megaten](https://github.com/Squiddleton/Megaten)** — fonte de dados dos demônios
 - **HTML5 / CSS3**
 
 > ⚠️ **Observação**  
@@ -227,7 +227,7 @@ The application consumes data from the **megaten** library and turns it into a s
 * **Vite**
 * **Bootstrap 5**
 * **Font Awesome**
-* **megaten**
+* **[megaten](https://github.com/Squiddleton/Megaten)**
 * **HTML5 / CSS3**
 
 > ⚠️ **Note**
@@ -251,5 +251,3 @@ The application consumes data from the **megaten** library and turns it into a s
 
 This project is for educational purposes only.
 All data and assets belong to Atlus.
-
-```
